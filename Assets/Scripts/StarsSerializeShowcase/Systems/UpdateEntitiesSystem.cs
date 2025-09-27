@@ -10,19 +10,18 @@ public struct UpdateEntitiesSystem : IUpdateSystem, W.IQueryFunction<Position, D
     private W.ContextValue<SceneConfig> cfg;
     private NativeArray<InstanceGpuData> tempGpuData;
     private float _dtTemp;
-    
-    [ThreadStatic]
-    private static System.Random _random;
+
+    [ThreadStatic] private static System.Random _random;
 
     [MethodImpl(AggressiveInlining)]
     public void Update() {
-        tempGpuData = new NativeArray<InstanceGpuData>(cfg.Get().MaxEntities,  Allocator.Temp);
+        tempGpuData = new NativeArray<InstanceGpuData>(cfg.Get().MaxEntities, Allocator.Temp);
         _dtTemp = Time.deltaTime;
-        
+
         var entitiesPerThread = (uint) Math.Max(renderData.Get().InstanceCount / Environment.ProcessorCount, 1024 * 16);
 
         W.Query.Parallel.For<Position, Direction, Speed, EntityColor, GpuInstance, UpdateEntitiesSystem>(entitiesPerThread, ref this);
-        
+
         renderData.Get().Draw(tempGpuData);
         tempGpuData = default;
     }
@@ -30,15 +29,15 @@ public struct UpdateEntitiesSystem : IUpdateSystem, W.IQueryFunction<Position, D
     [MethodImpl(AggressiveInlining)]
     public void Run(World<WT>.Entity entity, ref Position pos, ref Direction dir, ref Speed speed, ref EntityColor color, ref GpuInstance instance) {
         _random ??= new System.Random();
-        
+
         UpdateDirection(ref dir.Value, 1.5f, 0.5f);
         pos.Value += dir.Value * (speed.Value * _dtTemp);
-            
+
         CheckBounds(ref pos.Value, ref dir.Value, renderData.Get().SphereRadius);
         UpdateColor(ref color.Value, _dtTemp, cfg.Get().ColorChangeSpeed);
         tempGpuData[instance.Index] = new InstanceGpuData(pos.Value, color.Value);
     }
-    
+
     [MethodImpl(AggressiveInlining)]
     private static void CheckBounds(ref Vector3 pos, ref Vector3 dir, float sphereRadius) {
         if (pos.magnitude > sphereRadius) {
@@ -62,7 +61,7 @@ public struct UpdateEntitiesSystem : IUpdateSystem, W.IQueryFunction<Position, D
         var yaw = NextFloat(-maxYawDeg, maxYawDeg);
         dir = Quaternion.Euler(0f, yaw, 0f) * dir;
 
-        var pitch =NextFloat(-maxPitchDeg, maxPitchDeg);
+        var pitch = NextFloat(-maxPitchDeg, maxPitchDeg);
         var pitchAxis = Vector3.Cross(Vector3.up, dir).normalized;
         dir = Quaternion.AngleAxis(pitch, pitchAxis) * dir;
 

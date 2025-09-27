@@ -2,7 +2,6 @@
 using FFS.Libraries.StaticEcs;
 
 public readonly struct UpdateUiSystem : IUpdateSystem {
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Update() {
         ref var data = ref W.Context<RenderData>.Get();

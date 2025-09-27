@@ -30,11 +30,11 @@ public readonly struct UpdateCameraSystem : IUpdateSystem, IInitSystem {
         ref var camera = ref W.Context<RenderData>.Get().Camera;
         ref var renderData = ref W.Context<RenderData>.Get();
         renderData.TimeFromStart += Time.deltaTime;
-            
-        var direction = (camera.transform.position - Vector3.zero).normalized;
+
+        var direction = camera.transform.position.normalized;
         direction = Quaternion.Euler(0f, 20f * Time.deltaTime, 0f) * direction;
 
-        camera.transform.position = Vector3.zero + direction * (cfg.CameraMaxDistance + Mathf.Sin(renderData.TimeFromStart * cfg.CameraSpeed) * cfg.CameraAmplitude);
+        camera.transform.position = direction * (cfg.CameraMaxDistance + Mathf.Sin(renderData.TimeFromStart * cfg.CameraSpeed) * cfg.CameraAmplitude);
         camera.transform.LookAt(Vector3.zero);
     }
 }

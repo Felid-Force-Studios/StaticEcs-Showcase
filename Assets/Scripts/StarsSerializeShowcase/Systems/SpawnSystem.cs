@@ -11,10 +11,9 @@ public struct Spawner {
 }
 
 public struct SpawnSystem : IUpdateSystem, IInitSystem {
-
     public void Init() {
         W.Context<Spawner>.Set(new Spawner());
-        
+
         W.Serializer.SetSnapshotHandler(
             new Guid("bc1da30558fd5ad422c48143852ff61e"), 0,
             (ref BinaryPackWriter writer) => {
@@ -25,7 +24,7 @@ public struct SpawnSystem : IUpdateSystem, IInitSystem {
                 spawner.Timer = reader.ReadFloat();
             });
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Update() {
         ref var data = ref W.Context<RenderData>.Get();
