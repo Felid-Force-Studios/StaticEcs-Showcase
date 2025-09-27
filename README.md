@@ -1,2 +1,5 @@
 # StaticEcs-Showcase
-StaticEcs examples
+### StaticEcs examples
+
+### Serializers:
+![Stars.png](Stars.png)
