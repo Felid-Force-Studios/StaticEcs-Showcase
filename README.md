@@ -1,0 +1,2 @@
+# StaticEcs-Showcase
+StaticEcs examples
