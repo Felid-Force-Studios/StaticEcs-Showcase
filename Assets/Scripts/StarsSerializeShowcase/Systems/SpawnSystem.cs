@@ -14,15 +14,7 @@ public struct SpawnSystem : IUpdateSystem, IInitSystem {
     public void Init() {
         W.Context<Spawner>.Set(new Spawner());
 
-        W.Serializer.SetSnapshotHandler(
-            new Guid("bc1da30558fd5ad422c48143852ff61e"), 0,
-            (ref BinaryPackWriter writer) => {
-                ref var spawner = ref W.Context<Spawner>.Get();
-                writer.WriteFloat(spawner.Timer);
-            }, (ref BinaryPackReader reader, ushort version) => {
-                ref var spawner = ref W.Context<Spawner>.Get();
-                spawner.Timer = reader.ReadFloat();
-            });
+        SetSnapshotHandler();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -47,6 +39,20 @@ public struct SpawnSystem : IUpdateSystem, IInitSystem {
                     new GpuInstance(data.InstanceCount++)
                 );
             }
+
+            W.Events.Send(new UiEntityCountUpdate(data.InstanceCount));
         }
+    }
+
+    private static void SetSnapshotHandler() {
+        W.Serializer.SetSnapshotHandler(
+            new Guid("bc1da30558fd5ad422c48143852ff61e"), 0,
+            (ref BinaryPackWriter writer) => {
+                ref var spawner = ref W.Context<Spawner>.Get();
+                writer.WriteFloat(spawner.Timer);
+            }, (ref BinaryPackReader reader, ushort version) => {
+                ref var spawner = ref W.Context<Spawner>.Get();
+                spawner.Timer = reader.ReadFloat();
+            });
     }
 }

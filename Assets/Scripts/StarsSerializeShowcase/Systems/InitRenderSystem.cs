@@ -26,19 +26,7 @@ public struct InitRenderSystem : IInitSystem, IDestroySystem {
         });
 
 
-        W.Serializer.SetSnapshotHandler(
-            new Guid("bc1da30558fd5ad459c48143852ff61e"), 0,
-            (ref BinaryPackWriter writer) => {
-                ref var renderData = ref W.Context<RenderData>.Get();
-                writer.WriteInt(renderData.InstanceCount);
-                writer.WriteFloat(renderData.SphereRadius);
-                writer.WriteFloat(renderData.TimeFromStart);
-            }, (ref BinaryPackReader reader, ushort version) => {
-                ref var renderData = ref W.Context<RenderData>.Get();
-                renderData.InstanceCount = reader.ReadInt();
-                renderData.SphereRadius = reader.ReadFloat();
-                renderData.TimeFromStart = reader.ReadFloat();
-            });
+        SetSnapshotHandler();
     }
 
     private static Material CreateMaterial(SceneConfig settings, GraphicsBuffer buffer) {
@@ -60,6 +48,22 @@ public struct InitRenderSystem : IInitSystem, IDestroySystem {
         var mesh = cube.GetComponent<MeshFilter>().mesh;
         GameObject.Destroy(cube);
         return mesh;
+    }
+
+    private static void SetSnapshotHandler() {
+        W.Serializer.SetSnapshotHandler(
+            new Guid("bc1da30558fd5ad459c48143852ff61e"), 0,
+            (ref BinaryPackWriter writer) => {
+                ref var renderData = ref W.Context<RenderData>.Get();
+                writer.WriteInt(renderData.InstanceCount);
+                writer.WriteFloat(renderData.SphereRadius);
+                writer.WriteFloat(renderData.TimeFromStart);
+            }, (ref BinaryPackReader reader, ushort version) => {
+                ref var renderData = ref W.Context<RenderData>.Get();
+                renderData.InstanceCount = reader.ReadInt();
+                renderData.SphereRadius = reader.ReadFloat();
+                renderData.TimeFromStart = reader.ReadFloat();
+            });
     }
 }
 
