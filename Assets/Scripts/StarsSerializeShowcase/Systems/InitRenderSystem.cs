@@ -53,12 +53,12 @@ public struct InitRenderSystem : IInitSystem, IDestroySystem {
     private static void SetSnapshotHandler() {
         W.Serializer.SetSnapshotHandler(
             new Guid("bc1da30558fd5ad459c48143852ff61e"), 0,
-            (ref BinaryPackWriter writer) => {
+            (ref BinaryPackWriter writer, SnapshotWriteParams param) => {
                 ref var renderData = ref W.Context<RenderData>.Get();
                 writer.WriteInt(renderData.InstanceCount);
                 writer.WriteFloat(renderData.SphereRadius);
                 writer.WriteFloat(renderData.TimeFromStart);
-            }, (ref BinaryPackReader reader, ushort version) => {
+            }, (ref BinaryPackReader reader, ushort version, SnapshotReadParams param) => {
                 ref var renderData = ref W.Context<RenderData>.Get();
                 renderData.InstanceCount = reader.ReadInt();
                 renderData.SphereRadius = reader.ReadFloat();

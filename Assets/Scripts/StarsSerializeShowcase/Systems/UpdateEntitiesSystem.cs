@@ -27,7 +27,7 @@ public struct UpdateEntitiesSystem : IUpdateSystem, W.IQueryFunction<Position, D
     }
 
     [MethodImpl(AggressiveInlining)]
-    public void Run(World<WT>.Entity entity, ref Position pos, ref Direction dir, ref Speed speed, ref EntityColor color, ref GpuInstance instance) {
+    public void Invoke(World<WT>.Entity entity, ref Position pos, ref Direction dir, ref Speed speed, ref EntityColor color, ref GpuInstance instance) {
         _random ??= new System.Random();
 
         UpdateDirection(ref dir.Value, 1.5f, 0.5f);

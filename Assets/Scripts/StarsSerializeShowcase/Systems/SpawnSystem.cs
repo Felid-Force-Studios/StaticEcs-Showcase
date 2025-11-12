@@ -47,10 +47,10 @@ public struct SpawnSystem : IUpdateSystem, IInitSystem {
     private static void SetSnapshotHandler() {
         W.Serializer.SetSnapshotHandler(
             new Guid("bc1da30558fd5ad422c48143852ff61e"), 0,
-            (ref BinaryPackWriter writer) => {
+            (ref BinaryPackWriter writer, SnapshotWriteParams param) => {
                 ref var spawner = ref W.Context<Spawner>.Get();
                 writer.WriteFloat(spawner.Timer);
-            }, (ref BinaryPackReader reader, ushort version) => {
+            }, (ref BinaryPackReader reader, ushort version, SnapshotReadParams param) => {
                 ref var spawner = ref W.Context<Spawner>.Get();
                 spawner.Timer = reader.ReadFloat();
             });

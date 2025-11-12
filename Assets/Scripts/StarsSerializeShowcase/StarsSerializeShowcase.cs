@@ -32,7 +32,6 @@ public class StarsSerializeShowcase : MonoBehaviour {
         context.sceneConfig.MaxEntities = entitiesCount;
         
         var config = WorldConfig.Default();
-        config.baseEntitiesCapacity = (uint) context.sceneConfig.MaxEntities;
         config.ParallelQueryType = ParallelQueryType.MaxThreadsCount;
         
         W.Create(config);
@@ -40,7 +39,7 @@ public class StarsSerializeShowcase : MonoBehaviour {
         EcsDebug<WT>.AddWorld();
         AutoRegister<WT>.Apply();
 
-        W.Initialize();
+        W.Initialize((uint) context.sceneConfig.MaxEntities);
 
         W.Context<WContext>.Set(context);
         W.Context<SceneConfig>.Set(context.sceneConfig);

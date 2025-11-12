@@ -26,11 +26,11 @@ public readonly struct UpdateCameraSystem : IUpdateSystem, IInitSystem {
     private static void SetSnapshotHandler() {
         W.Serializer.SetSnapshotHandler(
             new Guid("bc2da32558fd5ad422c48143852ff61e"), 0,
-            (ref BinaryPackWriter writer) => {
+            (ref BinaryPackWriter writer, SnapshotWriteParams param) => {
                 var cam = W.Context<RenderData>.Get().Camera.transform;
                 writer.WriteVector3(cam.position);
                 writer.WriteQuaternion(cam.rotation);
-            }, (ref BinaryPackReader reader, ushort version) => {
+            }, (ref BinaryPackReader reader, ushort version, SnapshotReadParams param) => {
                 var cam = W.Context<RenderData>.Get().Camera.transform;
                 cam.position = reader.ReadVector3();
                 cam.rotation = reader.ReadQuaternion();
