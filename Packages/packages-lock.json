@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "a7c30b9e9e6fcd1c9daba2fbba09da1056be73ee"
+      "hash": "7b9dfe71ae9af76697bc75a4edb8f4d24e832d35"
     },
     "com.felid-force-studios.static-ecs-unity": {
       "version": "https://github.com/Felid-Force-Studios/StaticEcs-Unity.git",
