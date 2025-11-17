@@ -2,14 +2,22 @@
 using System.Runtime.CompilerServices;
 using FFS.Libraries.StaticEcs;
 using FFS.Libraries.StaticPack;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
+#if ENABLE_IL2CPP
+using Unity.IL2CPP.CompilerServices;
+#endif
 
 [Serializable]
 public struct Spawner {
     public float Timer;
 }
 
+#if ENABLE_IL2CPP
+[Il2CppSetOption(Option.NullChecks, false)]
+[Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+#endif
 public struct SpawnSystem : IUpdateSystem, IInitSystem {
     public void Init() {
         W.Context<Spawner>.Set(new Spawner());
@@ -33,9 +41,9 @@ public struct SpawnSystem : IUpdateSystem, IInitSystem {
             for (var i = data.InstanceCount; i < target; i++) {
                 W.Entity.New(
                     new Position(),
-                    new Direction(new Vector3(0.1f, 0, 0.1f)),
+                    new Direction(new float3(0.1f, 0, 0.1f)),
                     new Speed(Random.Range(0.5f, 1f)),
-                    new EntityColor(cfg.StartColor),
+                    new EntityColor(new float4(cfg.StartColor.r, cfg.StartColor.g, cfg.StartColor.b, cfg.StartColor.a)),
                     new GpuInstance(data.InstanceCount++)
                 );
             }

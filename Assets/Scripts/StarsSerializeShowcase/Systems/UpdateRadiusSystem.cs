@@ -1,7 +1,14 @@
 ﻿using System.Runtime.CompilerServices;
 using FFS.Libraries.StaticEcs;
 using UnityEngine;
+#if ENABLE_IL2CPP
+using Unity.IL2CPP.CompilerServices;
+#endif
 
+#if ENABLE_IL2CPP
+[Il2CppSetOption(Option.NullChecks, false)]
+[Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+#endif
 public struct UpdateRadiusSystem : IUpdateSystem {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Update() {

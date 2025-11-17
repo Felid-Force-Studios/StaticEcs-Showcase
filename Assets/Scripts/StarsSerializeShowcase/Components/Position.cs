@@ -4,6 +4,7 @@ using FFS.Libraries.StaticPack;
 using FFS.Libraries.StaticEcs.Unity;
 using UnityEngine.Scripting;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 using static System.Runtime.CompilerServices.MethodImplOptions;
 using static FFS.Libraries.StaticEcs.World<WT>;
@@ -18,9 +19,9 @@ using Unity.IL2CPP.CompilerServices;
 [Serializable]
 [StaticEcsEditorColor(1f, 1f, 1f)]
 public struct Position : IComponent {
-    public Vector3 Value;
+    public float3 Value;
 
-    public Position(Vector3 value) {
+    public Position(float3 value) {
         Value = value;
     }
 
@@ -42,7 +43,7 @@ public struct Position : IComponent {
 
         public override BinaryReader<Position> Reader() =>
             (ref BinaryPackReader reader) => new Position {
-                Value = new Vector3(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat())
+                Value = new float3(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat())
             };
 
         public override IPackArrayStrategy<Position> ReadWriteStrategy() => new UnmanagedPackArrayStrategy<Position>();

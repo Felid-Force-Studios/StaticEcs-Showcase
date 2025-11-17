@@ -28,7 +28,7 @@ public class WContext {
 public class StarsSerializeShowcase : MonoBehaviour {
     public WContext context;
 
-    public void Create(int entitiesCount) {
+    public void Create(int entitiesCount, bool burst, bool parallel) {
         context.sceneConfig.MaxEntities = entitiesCount;
         
         var config = WorldConfig.Default();
@@ -53,9 +53,14 @@ public class StarsSerializeShowcase : MonoBehaviour {
             new UpdateCameraSystem(),
             new UpdateRadiusSystem(),
             new SpawnSystem(),
-            new UpdateEntitiesSystem(),
             new UpdateUiSystem()
         );
+        
+        if (burst) {
+            UpdateSystems.AddUpdate(new UpdateEntitiesBurstSystem(parallel));
+        } else {
+            UpdateSystems.AddUpdate(new UpdateEntitiesSystem(parallel));
+        }
 
         UpdateSystems.Initialize();
         EcsDebug<WT>.AddSystem<UpdateSystemsType>();

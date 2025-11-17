@@ -3,7 +3,14 @@ using System.Runtime.CompilerServices;
 using FFS.Libraries.StaticEcs;
 using FFS.Libraries.StaticPack;
 using UnityEngine;
+#if ENABLE_IL2CPP
+using Unity.IL2CPP.CompilerServices;
+#endif
 
+#if ENABLE_IL2CPP
+[Il2CppSetOption(Option.NullChecks, false)]
+[Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+#endif
 public readonly struct UpdateCameraSystem : IUpdateSystem, IInitSystem {
     public void Init() {
         SetSnapshotHandler();

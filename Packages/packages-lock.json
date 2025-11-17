@@ -5,14 +5,14 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "7b9dfe71ae9af76697bc75a4edb8f4d24e832d35"
+      "hash": "766fe93567d438726bd36b673e9d10ad58029e49"
     },
     "com.felid-force-studios.static-ecs-unity": {
       "version": "https://github.com/Felid-Force-Studios/StaticEcs-Unity.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "c5eeb91e1013118561e234d9bd784d31ce53aef9"
+      "hash": "5829b6007f3e513eb57923fc2325f4aadec013f4"
     },
     "com.felid-force-studios.static-pack": {
       "version": "https://github.com/Felid-Force-Studios/StaticPack.git",

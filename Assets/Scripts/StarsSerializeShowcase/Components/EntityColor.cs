@@ -4,6 +4,7 @@ using FFS.Libraries.StaticPack;
 using FFS.Libraries.StaticEcs.Unity;
 using UnityEngine.Scripting;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using UnityEngine;
 using static System.Runtime.CompilerServices.MethodImplOptions;
 using static FFS.Libraries.StaticEcs.World<WT>;
@@ -18,9 +19,9 @@ using Unity.IL2CPP.CompilerServices;
 [Serializable]
 [StaticEcsEditorColor(1f, 1f, 1f)]
 public struct EntityColor : IComponent {
-    public Color Value;
+    public float4 Value;
 
-    public EntityColor(Color value) {
+    public EntityColor(float4 value) {
         Value = value;
     }
 
@@ -35,15 +36,15 @@ public struct EntityColor : IComponent {
 
         public override BinaryWriter<EntityColor> Writer() =>
             (ref BinaryPackWriter writer, in EntityColor value) => {
-                writer.WriteFloat(value.Value.r);
-                writer.WriteFloat(value.Value.g);
-                writer.WriteFloat(value.Value.b);
-                writer.WriteFloat(value.Value.a);
+                writer.WriteFloat(value.Value.x);
+                writer.WriteFloat(value.Value.y);
+                writer.WriteFloat(value.Value.z);
+                writer.WriteFloat(value.Value.w);
             };
 
         public override BinaryReader<EntityColor> Reader() =>
             (ref BinaryPackReader reader) => new EntityColor {
-                Value = new Color(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat())
+                Value = new float4(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat())
             };
 
         public override IPackArrayStrategy<EntityColor> ReadWriteStrategy() => new UnmanagedPackArrayStrategy<EntityColor>();

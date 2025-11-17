@@ -3,10 +3,17 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using FFS.Libraries.StaticEcs;
 using FFS.Libraries.StaticPack;
-using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using static System.Runtime.CompilerServices.MethodImplOptions;
+#if ENABLE_IL2CPP
+using Unity.IL2CPP.CompilerServices;
+#endif
 
+#if ENABLE_IL2CPP
+[Il2CppSetOption(Option.NullChecks, false)]
+[Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+#endif
 public struct InitRenderSystem : IInitSystem, IDestroySystem {
     static readonly int BufferID = Shader.PropertyToID("_Buffer");
     static readonly int ScaleID = Shader.PropertyToID("_Scale");
@@ -14,7 +21,7 @@ public struct InitRenderSystem : IInitSystem, IDestroySystem {
     public void Init() {
         var cfg = W.Context<SceneConfig>.Get();
         var mesh = CreateMesh();
-        var gpuBuffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, cfg.MaxEntities, Marshal.SizeOf(typeof(InstanceGpuData)));
+        var gpuBuffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, GraphicsBuffer.UsageFlags.LockBufferForWrite, cfg.MaxEntities, Marshal.SizeOf(typeof(InstanceGpuData)));
         var material = CreateMaterial(cfg, gpuBuffer);
 
         W.Context<RenderData>.Set(new RenderData {
@@ -69,15 +76,15 @@ public struct InitRenderSystem : IInitSystem, IDestroySystem {
 
 [StructLayout(LayoutKind.Explicit)]
 public struct InstanceGpuData {
-    [FieldOffset(0)] public Vector3 position;
+    [FieldOffset(0)] public float3 position;
     [FieldOffset(0)] public float positionX;
     [FieldOffset(4)] public float positionY;
     [FieldOffset(8)] public float positionZ;
     [FieldOffset(12)] public float pad;
-    [FieldOffset(16)] public Color color;
+    [FieldOffset(16)] public float4 color;
 
     [MethodImpl(AggressiveInlining)]
-    public InstanceGpuData(Vector3 position, Color color) {
+    public InstanceGpuData(float3 position, float4 color) {
         positionX = 0;
         positionY = 0;
         positionZ = 0;
@@ -97,9 +104,7 @@ public struct RenderData {
     public float TimeFromStart;
 
     [MethodImpl(AggressiveInlining)]
-    public void Draw(NativeArray<InstanceGpuData> data) {
-        GpuInstancesBuffer.SetData(data);
-
+    public void Draw() {
         var renderParams = new RenderParams(Material) {
             camera = Camera,
             worldBounds = new Bounds(Vector3.zero, SphereRadius * Vector3.one)
