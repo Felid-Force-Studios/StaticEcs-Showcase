@@ -77,7 +77,7 @@ public class StarsSerializeShowcase : MonoBehaviour {
         if (W.IsWorldInitialized()) {
             UpdateSystems.Destroy();
             W.Destroy();
-            context.ui.Canvas.SetActive(false);
+            context?.ui?.Canvas?.SetActive(false);
             gameObject.SetActive(false);
         }
     }
