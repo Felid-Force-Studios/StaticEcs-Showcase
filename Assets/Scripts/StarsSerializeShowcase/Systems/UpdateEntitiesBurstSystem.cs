@@ -80,7 +80,6 @@ public unsafe struct UpdateEntitiesBurstSystem : IInitSystem, IUpdateSystem {
         gpuData = default;
     }
 
-    [BurstCompile]
     [MethodImpl(AggressiveInlining)]
     private void InvokeOne(ref Position position, ref Direction direction, ref EntityColor entityColor, ref Speed speed, ref GpuInstance gpuInstance, int worker) {
         ref var pos = ref position.Value;
@@ -116,7 +115,6 @@ public unsafe struct UpdateEntitiesBurstSystem : IInitSystem, IUpdateSystem {
         gpuData[gpuInstance.Index] = new InstanceGpuData(pos, color);
     }
 
-    [BurstCompile]
     [MethodImpl(AggressiveInlining)]
     private void InvokeBlock(Position* positions, Direction* directions, EntityColor* entityColors, Speed* speeds, GpuInstance* gpuInstances, int worker, uint dataOffest) {
         // Here, custom optimization of the entire entity block is possible. (SIMD, unroll, etc.)
